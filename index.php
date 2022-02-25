@@ -18,6 +18,25 @@
 
 // TODO Votre code ici.
 
+require __DIR__ . "/Classes/DBSingleton.php";
+
+$pdo = DBSingleton::PDO();
+
+$stm = $pdo->prepare("
+    SELECT article.id, article.title, article.content, categorie.name
+    FROM article
+    INNER JOIN categorie ON article.category_fk = categorie.id
+");
+
+if ($stm->execute()) {
+    foreach ($stm->fetchAll() as $article) {
+        foreach ($article as $detail) {
+            echo $detail."<br>";
+        }
+        echo "<br>";
+    };
+}
+
 
 /**
  * 4. Réalisez la même chose que le point 3 en utilisant un maximum d'alias.
@@ -25,6 +44,20 @@
 
 // TODO Votre code ici.
 
+$stm = $pdo->prepare("
+    SELECT ar.id AS i, ar.title AS t, ar.content AS c, ca.name AS cn
+    FROM article AS ar
+    INNER JOIN categorie AS ca ON ar.category_fk = ca.id
+");
+
+if ($stm->execute()) {
+    foreach ($stm->fetchAll() as $article) {
+        foreach ($article as $key => $detail) {
+            echo $key." => ".$detail."<br>";
+        }
+        echo "<br>";
+    };
+}
 
 /**
  * 5. Ajoutez un utilisateur dans la table utilisateur.
@@ -33,3 +66,18 @@
  */
 
 // TODO Votre code ici.
+
+$stm = $pdo->prepare("
+    SELECT commentaire.content, utilisateur.firstName, utilisateur.lastName
+    FROM commentaire
+    LEFT JOIN utilisateur ON utilisateur.id = commentaire.user_fk
+");
+
+if ($stm->execute()) {
+    foreach ($stm->fetchAll() as $comment) {
+        foreach ($comment as $key => $detail) {
+            echo $key." => ".$detail."<br>";
+        }
+        echo "<br>";
+    };
+}
